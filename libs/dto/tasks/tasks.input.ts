@@ -12,7 +12,7 @@ export class TasksInput {
 	@IsOptional()
 	taskDescription: string;
 
-	@IsNotEmpty()
+	@IsOptional()
 	taskStatus: TaskStatus;
 
 	@IsNotEmpty()
@@ -22,6 +22,9 @@ export class TasksInput {
 class TISearch {
 	@IsNotEmpty()
 	taskRefId: ObjectId;
+
+	@IsOptional()
+	taskStatus: TaskStatus;
 }
 
 export class TasksInquiry {
