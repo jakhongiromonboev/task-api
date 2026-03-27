@@ -24,6 +24,6 @@ const TasksSchema = new Schema(
 	{ timestamps: true, collection: 'tasks' },
 );
 
-TasksSchema.index({ TaskTitle: 1, dueDate: 1 });
+TasksSchema.index({ taskTitle: 1, dueDate: 1 });
 
 export default TasksSchema;

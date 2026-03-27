@@ -20,7 +20,7 @@ export class TasksInput {
 }
 
 class TISearch {
-	@IsNotEmpty()
+	@IsOptional()
 	taskRefId: ObjectId;
 
 	@IsOptional()

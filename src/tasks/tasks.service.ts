@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Direction } from 'libs/config';
 import { Task, Tasks } from 'libs/dto/tasks/tasks';
 import { TasksInput, TasksInquiry } from 'libs/dto/tasks/tasks.input';
 import { Model } from 'mongoose';
+import { ObjectId } from 'bson';
+import { TasksUpdate } from 'libs/dto/tasks/tasks.update';
 
 @Injectable()
 export class TasksService {
@@ -48,5 +50,32 @@ export class TasksService {
 		if (!result.length) throw new InternalServerErrorException('NO DATA FOUND');
 
 		return result[0];
+	}
+
+	public async getTask(id: ObjectId): Promise<Task> {
+		const match: any = {
+			_id: id,
+		};
+
+		const targetTask: Task = await this.tasksModel.findOne(match).lean().exec();
+		if (!targetTask) throw new InternalServerErrorException('NO DATA FOUND');
+
+		return targetTask;
+	}
+
+	public async updateTask(shapedId: ObjectId, input: TasksUpdate): Promise<Task> {
+		const result = await this.tasksModel.findByIdAndUpdate(shapedId, input, { new: true }).exec();
+
+		if (!result) throw new InternalServerErrorException('Task update failed');
+
+		return result;
+	}
+
+	public async deleteTask(id: ObjectId): Promise<Task> {
+		const result = await this.tasksModel.findByIdAndDelete(id).exec();
+
+		if (!result) throw new NotFoundException('Task not found');
+
+		return result;
 	}
 }
